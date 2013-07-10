@@ -20,7 +20,7 @@ end
 
 describe Command do
   before do
-    @command = Command.new("create foo")
+    @command = Command.new("init foo")
   end
 
   it 'works' do
