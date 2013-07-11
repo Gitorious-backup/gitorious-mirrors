@@ -2,16 +2,26 @@ require 'minitest/autorun'
 require 'mocha/setup'
 
 class Command
-  def initialize(original_command)
-    @action, @path = original_command.split(' ')
+  SEPARATOR = ' '.freeze
+
+  def initialize(original_command, repo_root)
+    @original_command = original_command
+    @repo_root = repo_root
   end
 
   def execute
-    if @action == 'init'
-      Command::Init.new(@path, '/var/git').execute
-    elsif @action == 'clone'
-      Command::Clone.new('source', 'target', '/var/git').execute
-    end
+    %(git-shell -c "#{create_command}")
+  end
+
+  private
+
+  def create_command
+    slices = @original_command.split(SEPARATOR)
+    path   = File.join(@repo_root, slices.pop)
+
+    slices << path
+
+    slices.join(SEPARATOR)
   end
 end
 
@@ -74,24 +84,12 @@ class Command::Delete
 end
 
 describe Command do
-  describe 'init' do
-    before do
-      @command = Command.new('init foo')
-    end
-
-    it 'works' do
-      assert_equal '/bin/sh -c mkdir /var/git/foo && cd /var/git/foo && git init --bare', @command.execute
-    end
+  before do
+    @command = Command.new('git upload-pack foo.git', '/var/git')
   end
 
-  describe 'clone' do
-    before do
-      @command = Command.new('clone source target')
-    end
-
-    it 'works' do
-      assert_equal 'git clone /var/git/source /var/git/target', @command.execute
-    end
+  it 'creates command for git-shell' do
+    assert_equal 'git-shell -c "git upload-pack /var/git/foo.git"', @command.execute
   end
 end
 
