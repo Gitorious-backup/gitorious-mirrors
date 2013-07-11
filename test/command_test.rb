@@ -65,7 +65,7 @@ describe Command::Init do
 
   describe '#execute' do
     it 'executes git init command' do
-      assert_equal '/bin/sh -c mkdir /var/git/foo && cd /var/git/foo && git init --bare', @action.execute
+      assert_equal "/bin/sh -c \"mkdir /var/git/foo && cd /var/git/foo && git init --bare\"", @action.execute
     end
   end
 end

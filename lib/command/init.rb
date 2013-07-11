@@ -6,7 +6,7 @@ class Command::Init
   end
 
   def execute
-    "/bin/sh -c mkdir #{repo_path} && cd #{repo_path} && #{GIT_COMMAND}"
+    "/bin/sh -c \"mkdir #{repo_path} && cd #{repo_path} && #{GIT_COMMAND}\""
   end
 
   private
