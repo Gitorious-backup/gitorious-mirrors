@@ -10,7 +10,8 @@ class Command
 
     type =
       case verb
-      when 'init' then Command::Init
+      when 'init'  then Command::Init
+      when 'clone' then Command::Clone
       else
         raise ArgumentError, "command #{original_command.inspect} is not supported"
       end
@@ -110,6 +111,16 @@ describe Command do
 
       it 'creates Init action' do
         assert_equal Command::Init, @action.class
+      end
+    end
+
+    describe 'with clone verb' do
+      before do
+        @action = Command.build('clone source target')
+      end
+
+      it 'creates Clone action' do
+        assert_equal Command::Clone, @action.class
       end
     end
 
