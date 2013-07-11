@@ -3,6 +3,8 @@ require "command"
 require "command/init"
 require "command/clone"
 require "command/delete"
+require "command/git"
+
 describe Command do
   before do
     @command = Command.new('git upload-pack foo.git', '/var/git')
@@ -39,18 +41,19 @@ describe Command do
       end
     end
 
+    describe "with git-receive-pack verb" do
+      it "creates a Git action" do
+        action = Command.build('git-receive-pack repo.git', '/var/git')
+        assert_equal Command::Git, action.class
+      end
+    end
+
     describe 'with an invalid verb' do
       it 'raises ArgumentError' do
         assert_raises ArgumentError do
           Command.build('whatever foo')
         end
       end
-    end
-  end
-
-  describe '#execute' do
-    it 'creates command for git-shell' do
-      assert_equal 'git-shell -c "git upload-pack /var/git/foo.git"', @command.execute
     end
   end
 end
@@ -101,5 +104,12 @@ describe Command::Delete do
         assert_equal 'rm -Rf /var/git/foo.git', @action.execute
       end
     end
+  end
+end
+
+describe Command::Git do
+  it "executes git shell" do
+    action = Command.build("git-receive-pack foo.git", "/srv/repositories")
+    assert_equal "git-shell -c \"git-receive-pack /srv/repositories/foo.git\"", action.execute
   end
 end

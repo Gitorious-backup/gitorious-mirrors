@@ -10,6 +10,7 @@ class Command
       when 'init'   then Command::Init
       when 'clone'  then Command::Clone
       when 'delete' then Command::Delete
+      when 'git-receive-pack' then Command::Git
       else
         raise ArgumentError, "command #{original_command.inspect} is not supported"
       end
@@ -20,10 +21,6 @@ class Command
   def initialize(original_command, repo_root)
     @original_command = original_command
     @repo_root = repo_root
-  end
-
-  def execute
-    %(git-shell -c "#{create_command}")
   end
 
   private
