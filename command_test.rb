@@ -4,6 +4,20 @@ require 'mocha/setup'
 class Command
   SEPARATOR = ' '.freeze
 
+  def self.build(original_command)
+    slices = original_command.split(' ')
+    verb   = slices.shift
+
+    type =
+      case verb
+      when 'init' then Command::Init
+      else
+        raise ArgumentError, "command #{original_command.inspect} is not supported"
+      end
+
+    type.new(*slices, '/var/git')
+  end
+
   def initialize(original_command, repo_root)
     @original_command = original_command
     @repo_root = repo_root
@@ -86,6 +100,26 @@ end
 describe Command do
   before do
     @command = Command.new('git upload-pack foo.git', '/var/git')
+  end
+
+  describe '.build' do
+    describe 'with init verb' do
+      before do
+        @action = Command.build('init foo')
+      end
+
+      it 'creates Init action' do
+        assert_equal Command::Init, @action.class
+      end
+    end
+
+    describe 'with an invalid verb' do
+      it 'raises ArgumentError' do
+        assert_raises ArgumentError do
+          Command.build('whatever foo')
+        end
+      end
+    end
   end
 
   describe '#execute' do
