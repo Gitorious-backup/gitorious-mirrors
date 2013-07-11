@@ -1,7 +1,7 @@
 class Command
   SEPARATOR = ' '.freeze
 
-  def self.build(original_command)
+  def self.build(original_command, repo_root="/var/git")
     slices = original_command.split(' ')
     verb   = slices.shift
 
@@ -14,7 +14,7 @@ class Command
         raise ArgumentError, "command #{original_command.inspect} is not supported"
       end
 
-    type.new(*slices, '/var/git')
+    type.new(*slices, repo_root)
   end
 
   def initialize(original_command, repo_root)
