@@ -88,8 +88,10 @@ describe Command do
     @command = Command.new('git upload-pack foo.git', '/var/git')
   end
 
-  it 'creates command for git-shell' do
-    assert_equal 'git-shell -c "git upload-pack /var/git/foo.git"', @command.execute
+  describe '#execute' do
+    it 'creates command for git-shell' do
+      assert_equal 'git-shell -c "git upload-pack /var/git/foo.git"', @command.execute
+    end
   end
 end
 
@@ -98,8 +100,10 @@ describe Command::Init do
     @action = Command::Init.new('foo', '/var/git')
   end
 
-  it 'executes git init command' do
-    assert_equal '/bin/sh -c mkdir /var/git/foo && cd /var/git/foo && git init --bare', @action.execute
+  describe '#execute' do
+    it 'executes git init command' do
+      assert_equal '/bin/sh -c mkdir /var/git/foo && cd /var/git/foo && git init --bare', @action.execute
+    end
   end
 end
 
@@ -108,8 +112,10 @@ describe Command::Clone do
     @action = Command::Clone.new('source', 'target', '/var/git')
   end
 
-  it 'executes git clone command' do
-    assert_equal 'git clone /var/git/source /var/git/target', @action.execute
+  describe '#execute' do
+    it 'executes git clone command' do
+      assert_equal 'git clone /var/git/source /var/git/target', @action.execute
+    end
   end
 end
 
@@ -118,20 +124,22 @@ describe Command::Delete do
     @action = Command::Delete.new('foo.git', '/var/git')
   end
 
-  describe 'when directory does not exist' do
-    it 'raises an error' do
-      File.expects(:directory?).with('/var/git/foo.git').returns(false)
+  describe '#execute' do
+    describe 'when directory does not exist' do
+      it 'raises an error' do
+        File.expects(:directory?).with('/var/git/foo.git').returns(false)
 
-      assert_raises Command::Delete::InvalidPathError do
-        @action.execute
+        assert_raises Command::Delete::InvalidPathError do
+          @action.execute
+        end
       end
     end
-  end
 
-  describe 'path is valid' do
-    it 'removes the repository' do
-      File.expects(:directory?).with('/var/git/foo.git').returns(true)
-      assert_equal 'rm -Rf /var/git/foo.git', @action.execute
+    describe 'path is valid' do
+      it 'removes the repository' do
+        File.expects(:directory?).with('/var/git/foo.git').returns(true)
+        assert_equal 'rm -Rf /var/git/foo.git', @action.execute
+      end
     end
   end
 end
