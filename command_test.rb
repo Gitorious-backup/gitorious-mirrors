@@ -91,7 +91,7 @@ class Command::Delete
   private
 
   def repo_path
-    File.join(@repo_root, @repo_name)
+    File.join(@repo_root, "#{@repo_name}.git")
   end
 
   def valid_path?
@@ -177,7 +177,7 @@ end
 
 describe Command::Delete do
   before do
-    @action = Command.build('delete foo.git')
+    @action = Command.build('delete foo')
   end
 
   describe '#execute' do
