@@ -10,8 +10,9 @@ class Command
 
     type =
       case verb
-      when 'init'  then Command::Init
-      when 'clone' then Command::Clone
+      when 'init'   then Command::Init
+      when 'clone'  then Command::Clone
+      when 'delete' then Command::Delete
       else
         raise ArgumentError, "command #{original_command.inspect} is not supported"
       end
@@ -121,6 +122,16 @@ describe Command do
 
       it 'creates Clone action' do
         assert_equal Command::Clone, @action.class
+      end
+    end
+
+    describe 'with delete verb' do
+      before do
+        @action = Command.build('delete foo')
+      end
+
+      it 'creates Delete action' do
+        assert_equal Command::Delete, @action.class
       end
     end
 
