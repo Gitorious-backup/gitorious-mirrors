@@ -153,7 +153,7 @@ end
 
 describe Command::Init do
   before do
-    @action = Command::Init.new('foo', '/var/git')
+    @action = Command.build('init foo')
   end
 
   describe '#execute' do
@@ -165,7 +165,7 @@ end
 
 describe Command::Clone do
   before do
-    @action = Command::Clone.new('source', 'target', '/var/git')
+    @action = Command.build('clone source target')
   end
 
   describe '#execute' do
@@ -177,7 +177,7 @@ end
 
 describe Command::Delete do
   before do
-    @action = Command::Delete.new('foo.git', '/var/git')
+    @action = Command.build('delete foo.git')
   end
 
   describe '#execute' do
