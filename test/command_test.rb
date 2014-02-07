@@ -16,7 +16,7 @@ describe Command do
         @action = Command.build('init foo')
       end
 
-      it 'creates Init action' do
+    it 'creates Init action' do
         assert_equal Command::Init, @action.class
       end
     end
@@ -65,7 +65,7 @@ describe Command::Init do
 
   describe '#execute' do
     it 'executes git init command' do
-      assert_equal "/bin/sh -c \"mkdir /var/git/foo && cd /var/git/foo && git init --bare\"", @action.execute
+      assert_equal "/bin/sh -c \"mkdir -p /var/git/foo && cd /var/git/foo && git init --bare\"", @action.execute
     end
   end
 end
@@ -84,7 +84,7 @@ end
 
 describe Command::Delete do
   before do
-    @action = Command.build('delete foo')
+    @action = Command.build('delete foo.git')
   end
 
   describe '#execute' do

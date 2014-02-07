@@ -11,14 +11,14 @@ class Command::Delete
     if valid_path?
       "#{COMMAND} #{repo_path}"
     else
-      raise InvalidPathError, "Repository root #{@repo_root.inspect} is not valid"
+      raise InvalidPathError, "Repository path #{repo_path.inspect} is not valid"
     end
   end
 
   private
 
   def repo_path
-    File.join(@repo_root, "#{@repo_name}.git")
+    File.join(@repo_root, @repo_name)
   end
 
   def valid_path?
